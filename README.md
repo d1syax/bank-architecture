@@ -9,8 +9,8 @@
 
 Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/AutisticBankLab1.git
-cd AutisticBankLab1
+git clone https://github.com/YOUR_USERNAME/bank-architecture.git
+cd bank-architecture
 ```
 
 ## Configuration
