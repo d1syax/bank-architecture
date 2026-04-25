@@ -15,8 +15,7 @@ public class AccountService
 
     private static readonly string[] AllowedCurrencies = ["USD", "UAH", "EUR"];
 
-    public async Task<(bool Success, Account? Account, string? Error)> CreateAccountAsync(
-        int userId, string currency)
+    public async Task<(bool Success, Account? Account, string? Error)> CreateAccountAsync(int userId, string currency)
     {
         if (!AllowedCurrencies.Contains(currency.ToUpper()))
             return (false, null, $"Unknown currency. Allowed: {string.Join(", ", AllowedCurrencies)}");
@@ -42,8 +41,7 @@ public class AccountService
             .ToListAsync();
     }
 
-    public async Task<(bool Success, string? Error)> TransferAsync(
-        int userId, int fromAccountId, int toAccountId, decimal amount)
+    public async Task<(bool Success, string? Error)> TransferAsync(int userId, int fromAccountId, int toAccountId, decimal amount)
     {
         if (amount <= 0)
             return (false, "Transfer amount must be greater than zero");
@@ -88,8 +86,7 @@ public class AccountService
         }
     }
 
-    public async Task<(bool Success, string? Error)> DepositAsync(
-        int userId, int accountId, decimal amount)
+    public async Task<(bool Success, string? Error)> DepositAsync(int userId, int accountId, decimal amount)
     {
         if (amount <= 0)
             return (false, "Amount must be greater than zero");

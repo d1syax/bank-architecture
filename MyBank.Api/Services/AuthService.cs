@@ -19,8 +19,7 @@ public class AuthService
         _config = config;
     }
 
-    public async Task<(bool Success, string? Token, string? Error)> RegisterAsync(
-        string email, string password, string fullName)
+    public async Task<(bool Success, string? Token, string? Error)> RegisterAsync(string email, string password, string fullName)
     {
         if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
             return (false, null, "Invalid email");
@@ -48,8 +47,7 @@ public class AuthService
         return (true, GenerateToken(user), null);
     }
 
-    public async Task<(bool Success, string? Token, string? Error)> LoginAsync(
-        string email, string password)
+    public async Task<(bool Success, string? Token, string? Error)> LoginAsync(string email, string password)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (user == null)
