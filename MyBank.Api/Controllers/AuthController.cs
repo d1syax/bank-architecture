@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
             return BadRequest(new { error });
         }
 
-        return Ok(new { token });
+        return StatusCode(201, new { token });
     }
 
     [HttpPost("login")]

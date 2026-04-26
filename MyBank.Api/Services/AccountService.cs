@@ -17,6 +17,9 @@ public class AccountService
 
     public async Task<(bool Success, Account? Account, string? Error)> CreateAccountAsync(int userId, string currency)
     {
+        if (string.IsNullOrWhiteSpace(currency))
+            return (false, null, "Currency is required");
+        
         if (!AllowedCurrencies.Contains(currency.ToUpper()))
             return (false, null, $"Unknown currency. Allowed: {string.Join(", ", AllowedCurrencies)}");
 
