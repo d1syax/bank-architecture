@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,20 +16,28 @@ public class AuthIntegrationTests : IClassFixture<WebApplicationFactory<Program>
     {
         _client = factory.WithWebHostBuilder(builder =>
         {
+            builder.UseEnvironment("Testing");
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<BankDbContext>));
-                if (descriptor != null) services.Remove(descriptor);
+                var descriptors = services
+                    .Where(d =>
+                        d.ServiceType.FullName != null && (
+                        d.ServiceType.FullName.Contains("DbContext") ||
+                        d.ServiceType.FullName.Contains("Npgsql") ||
+                        d.ServiceType.FullName.Contains("EntityFramework")))
+                    .ToList();
+                foreach (var d in descriptors) services.Remove(d);
 
                 services.AddDbContext<BankDbContext>(options =>
-                    options.UseInMemoryDatabase("TestDb_" + Guid.NewGuid()));
+                    options.UseInMemoryDatabase("DbName")
+                           .ConfigureWarnings(w => w.Ignore(
+                               Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId.TransactionIgnoredWarning)));
             });
         }).CreateClient();
     }
 
     [Fact]
-    public async Task Register_ValidData_Returns200WithToken()
+    public async Task Register_ValidData_Returns201WithToken()
     {
         var response = await _client.PostAsJsonAsync("/api/auth/register", new
         {
@@ -37,7 +46,7 @@ public class AuthIntegrationTests : IClassFixture<WebApplicationFactory<Program>
             fullName = "Test User"
         });
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var body = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
         Assert.NotNull(body!["token"]);
     }
@@ -45,11 +54,14 @@ public class AuthIntegrationTests : IClassFixture<WebApplicationFactory<Program>
     [Fact]
     public async Task Register_DuplicateEmail_Returns409()
     {
-        var payload = new { email = "dup@example.com", password = "pass123", fullName = "User" };
-        await _client.PostAsJsonAsync("/api/auth/register", payload);
-        var response = await _client.PostAsJsonAsync("/api/auth/register", payload);
+        var email = $"dup_{Guid.NewGuid()}@example.com";
+        var payload = new { email, password = "pass123", fullName = "User" };
 
-        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        var first = await _client.PostAsJsonAsync("/api/auth/register", payload);
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        
+        var second = await _client.PostAsJsonAsync("/api/auth/register", payload);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
     }
 
     [Fact]

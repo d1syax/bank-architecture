@@ -34,15 +34,17 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<BankDbContext>();
     db.Database.Migrate();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
 app.Run();
 
 public partial class Program { }
