@@ -16,7 +16,6 @@ public class AuthIntegrationTests : IClassFixture<WebApplicationFactory<Program>
     {
         _client = factory.WithWebHostBuilder(builder =>
         {
-            builder.UseEnvironment("Testing");
             builder.ConfigureServices(services =>
             {
                 var descriptors = services
