@@ -3165,31 +3165,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\boyak\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/mac/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\boyak\\Documents\\GitHub\\bank-architecture\\MyBank.Api\\MyBank.Api.csproj",
+      "projectUniqueName": "/Users/mac/RiderProjects/bank-architecture/MyBank.Api/MyBank.Api.csproj",
       "projectName": "MyBank.Api",
-      "projectPath": "C:\\Users\\boyak\\Documents\\GitHub\\bank-architecture\\MyBank.Api\\MyBank.Api.csproj",
-      "packagesPath": "C:\\Users\\boyak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\boyak\\Documents\\GitHub\\bank-architecture\\MyBank.Api\\obj\\",
+      "projectPath": "/Users/mac/RiderProjects/bank-architecture/MyBank.Api/MyBank.Api.csproj",
+      "packagesPath": "/Users/mac/.nuget/packages/",
+      "outputPath": "/Users/mac/RiderProjects/bank-architecture/MyBank.Api/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\boyak\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/mac/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3208,7 +3201,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -3256,7 +3249,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
