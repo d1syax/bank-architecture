@@ -62,6 +62,9 @@ public class AccountService
 
         if (fromAccount.Balance < amount)
             return (false, "Insufficient funds");
+        
+        if (fromAccount.Currency != toAccount.Currency)
+            return (false, "Currency mismatch: accounts must have the same currency");
 
         await using var transaction = await _db.Database.BeginTransactionAsync();
         try

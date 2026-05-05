@@ -17,8 +17,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var (success, token, error) = await _authService.RegisterAsync(
-            request.Email, request.Password, request.FullName);
+        var (success, token, error) = await _authService.RegisterAsync(request.Email, request.Password, request.FullName);
 
         if (!success)
         {
@@ -33,8 +32,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var (success, token, error) = await _authService.LoginAsync(
-            request.Email, request.Password);
+        var (success, token, error) = await _authService.LoginAsync(request.Email, request.Password);
 
         if (!success)
             return Unauthorized(new { error });

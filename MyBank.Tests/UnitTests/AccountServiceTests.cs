@@ -2,9 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBank.Api.Data;
 using MyBank.Api.Models;
 using MyBank.Api.Services;
-
 namespace MyBank.Tests.UnitTests;
-
 public class AccountServiceTests
 {
     private BankDbContext CreateDb()
@@ -16,34 +14,27 @@ public class AccountServiceTests
             .Options;
         return new BankDbContext(options);
     }
-
     [Fact]
     public async Task CreateAccount_ValidCurrency_ReturnsAccount()
     {
         var db = CreateDb();
         var service = new AccountService(db);
-
         var (success, account, error) = await service.CreateAccountAsync(1, "USD");
-
         Assert.True(success);
         Assert.NotNull(account);
         Assert.Equal("USD", account.Currency);
         Assert.Equal(0, account.Balance);
     }
-
     [Fact]
     public async Task CreateAccount_InvalidCurrency_ReturnsError()
     {
         var db = CreateDb();
         var service = new AccountService(db);
-
         var (success, account, error) = await service.CreateAccountAsync(1, "XYZ");
-
         Assert.False(success);
         Assert.Null(account);
         Assert.Contains("Unknown currency", error);
     }
-
     [Fact]
     public async Task Transfer_SufficientFunds_Succeeds()
     {
@@ -53,15 +44,12 @@ public class AccountServiceTests
             new Account { Id = 2, Balance = 0, Currency = "USD", UserId = 2, AccountNumber = "BBB" }
         );
         await db.SaveChangesAsync();
-
         var service = new AccountService(db);
         var (success, error) = await service.TransferAsync(1, 1, 2, 300);
-
         Assert.True(success);
         Assert.Equal(700, db.Accounts.Find(1)!.Balance);
         Assert.Equal(300, db.Accounts.Find(2)!.Balance);
     }
-
     [Fact]
     public async Task Transfer_InsufficientFunds_ReturnsError()
     {
@@ -71,23 +59,66 @@ public class AccountServiceTests
             new Account { Id = 2, Balance = 0, Currency = "USD", UserId = 2, AccountNumber = "BBB" }
         );
         await db.SaveChangesAsync();
-
         var service = new AccountService(db);
         var (success, error) = await service.TransferAsync(1, 1, 2, 500);
-
         Assert.False(success);
         Assert.Equal("Insufficient funds", error);
     }
-
     [Fact]
     public async Task Transfer_NegativeAmount_ReturnsError()
     {
         var db = CreateDb();
         var service = new AccountService(db);
-
         var (success, error) = await service.TransferAsync(1, 1, 2, -100);
-
         Assert.False(success);
         Assert.Contains("greater than zero", error);
+    }
+    [Fact]
+    public async Task Deposit_ValidAmount_IncreasesBalance()
+    {
+        var db = CreateDb();
+        db.Accounts.Add(new Account { Id = 1, Balance = 100, Currency = "USD", UserId = 1, AccountNumber = "AAA" });
+        await db.SaveChangesAsync();
+        var service = new AccountService(db);
+        var (success, error) = await service.DepositAsync(1, 1, 50);
+        Assert.True(success);
+        Assert.Equal(150, db.Accounts.Find(1)!.Balance);
+    }
+    [Fact]
+    public async Task Deposit_AccountNotFound_ReturnsError()
+    {
+        var db = CreateDb();
+        var service = new AccountService(db);
+        var (success, error) = await service.DepositAsync(1, 999, 50);
+        Assert.False(success);
+        Assert.Contains("not found", error);
+    }
+    [Fact]
+    public async Task Transfer_FromSomeoneElsesAccount_ReturnsError()
+    {
+        var db = CreateDb();
+        db.Accounts.AddRange(
+            new Account { Id = 1, Balance = 1000, Currency = "USD", UserId = 2, AccountNumber = "AAA" },
+            new Account { Id = 2, Balance = 0, Currency = "USD", UserId = 3, AccountNumber = "BBB" }
+        );
+        await db.SaveChangesAsync();
+        var service = new AccountService(db);
+        var (success, error) = await service.TransferAsync(1, 1, 2, 100);
+        Assert.False(success);
+        Assert.Contains("not found", error);
+    }
+    [Fact]
+    public async Task Transfer_CurrencyMismatch_ReturnsError()
+    {
+        var db = CreateDb();
+        db.Accounts.AddRange(
+            new Account { Id = 1, Balance = 1000, Currency = "USD", UserId = 1, AccountNumber = "AAA" },
+            new Account { Id = 2, Balance = 0, Currency = "UAH", UserId = 2, AccountNumber = "BBB" }
+        );
+        await db.SaveChangesAsync();
+        var service = new AccountService(db);
+        var (success, error) = await service.TransferAsync(1, 1, 2, 100);
+        Assert.False(success);
+        Assert.Contains("Currency mismatch", error);
     }
 }

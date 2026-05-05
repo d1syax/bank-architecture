@@ -23,8 +23,7 @@ public class AccountsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request)
     {
-        var (success, account, error) = await _accountService.CreateAccountAsync(
-            GetUserId(), request.Currency);
+        var (success, account, error) = await _accountService.CreateAccountAsync(GetUserId(), request.Currency);
 
         if (!success)
             return BadRequest(new { error });
@@ -54,8 +53,7 @@ public class AccountsController : ControllerBase
     [HttpPost("transfer")]
     public async Task<IActionResult> Transfer([FromBody] TransferRequest request)
     {
-        var (success, error) = await _accountService.TransferAsync(
-            GetUserId(), request.FromAccountId, request.ToAccountId, request.Amount);
+        var (success, error) = await _accountService.TransferAsync(GetUserId(), request.FromAccountId, request.ToAccountId, request.Amount);
 
         if (!success)
         {
@@ -70,8 +68,7 @@ public class AccountsController : ControllerBase
     [HttpPost("{accountId}/deposit")]
     public async Task<IActionResult> Deposit(int accountId, [FromBody] DepositRequest request)
     {
-        var (success, error) = await _accountService.DepositAsync(
-            GetUserId(), accountId, request.Amount);
+        var (success, error) = await _accountService.DepositAsync(GetUserId(), accountId, request.Amount);
 
         if (!success)
         {
