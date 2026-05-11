@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6EUg1coqCZc=",
+  "dgSpecHash": "iKUBoJgEHLQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\boyak\\Documents\\lab1\\bank-architecture\\mybank.api\\MyBank.Api.csproj",
+  "projectFilePath": "C:\\Users\\boyak\\Documents\\lab1\\bank-architecture\\MyBank.Api\\MyBank.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\boyak\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\boyak\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

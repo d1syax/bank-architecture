@@ -28,7 +28,7 @@ public class AuthIntegrationTests : IClassFixture<WebApplicationFactory<Program>
                 foreach (var d in descriptors) services.Remove(d);
 
                 services.AddDbContext<BankDbContext>(options =>
-                    options.UseInMemoryDatabase(Guid.NewGuid().ToString())
+                    options.UseInMemoryDatabase("Database")
                            .ConfigureWarnings(w => w.Ignore(
                                Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId.TransactionIgnoredWarning)));
             });
